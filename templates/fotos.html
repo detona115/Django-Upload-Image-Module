@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+
+{% load crispy_forms_tags %}
+{% load thumbnail %}
+{% load static %}
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css">
+        <title>Fotos Page</title>
+    </head>
+    <body>        
+
+        <header>
+            <!-- Fixed navbar -->
+            <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+                <a href="{% url 'home' %}" class="navbar-brand my-0 mr-md-auto font-weight-normal">Django Upload Image Module</a>
+                <nav class="my-2 my-md-0 mr-md-3">
+                    <a class="p-2 text-dark" href="{% url 'home' %}">Home</a>
+                    <a class="p-2 text-dark" href="{% url 'listasfotos' %}">Fotos</a>
+                </nav>
+            </div>
+        </header>
+        
+        <h1 class="text-center mb-4">Images Uploaded</h1>        
+
+        <section>
+            <div class="container text-center mt-5">    
+
+                <!-- Barra de busca -->
+                <div class="row">
+                    <div class="col-6 m-auto">
+                        <form class="form-row my-2 mt-md-0" action="{% url 'listasfotos' %}" method="get">
+                            <input name="q" class="form-control" type="text" placeholder="Busca" aria-label="Search">
+                        </form>
+                    </div>
+                </div>                
+
+                <!-- Butões de visualização -->
+                <div>
+                    <button id="grid" type="button" class="btn btn-lg btn-light"><a href="#"><i class="fas fa-th"></i></a></button>
+                    <button id="list" type="button" class="btn btn-lg btn-light"><a href="#"><i class="fas fa-list"></i></a></button>
+                </div>    
+                
+                <!-- Fotos -->
+                <div class="row mt-4">
+                    
+                    {% if object_list %}
+
+                        {% for image in object_list  %}
+                            <div id="view" class="col-6 col-lg-3 mb-4">
+                                
+                                <!-- {% thumbnail image.arquivo "200x200" crop="center" as im %} -->
+                                <span tabindex="0" data-toggle="popover" data-content="
+                                                    <p>Tamanho da imagem : {{image.dimensao}} 
+                                                    <br>Formato da imagem : {{image.formato}}</p> 
+                                                    <p><a href='#'>Editar</a> <a id='imagem' download href='{{ image.arquivo.url }}' > Baixar </a></p> 
+                                                    ">
+                                    <img src="{{ image.thumb.url }}" alt="{{ image.descricao }}" class="img-thumbnail">                                
+                                </span>
+                                <h6 class="mt-2">{{ image.descricao }}</h6>
+                                <hr class="border-bottom border-info" style="width: 250px;">
+                            
+                                <!-- {% endthumbnail%}                 -->
+                            </div>
+                        {% endfor %}
+
+                    {% else %}
+
+                            <h3 class="m-auto">Nenhuma imagem encontrada na base de dados!</h3>
+                        
+                    {% endif %}
+
+                </div>               
+            </div>
+        </section>        
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+        <script>
+            $(document).ready(function(){
+                
+                // script da popover
+                $(function () {
+                    $('[data-toggle="popover"]').popover({
+                        trigger: 'focus',
+                        html: true,
+                        title: 'Detalhes sobre a Imagem <i class="fas fa-info-circle"></i>'                     
+                    });
+                        
+                });      
+
+                // script que ativa o butão grid
+                $('#grid').addClass('active');
+
+                // script que muda a vizualização para grid
+                $('#grid').click(function () {
+                    $(this).addClass('active');
+                    $('#list').removeClass('active')
+                    $('div[id=view]').removeClass('col-10');
+                    $('div[id=view]').addClass('col-lg-3 col-6');
+
+                });
+
+                // script que muda a vizualização para list
+                $('#list').click(function () {
+                    $(this).addClass('active');
+                    $('#grid').removeClass('active');
+                    $('div[id=view]').removeClass('col-lg-3 col-6');
+                    $('div[id=view]').addClass('col-10');
+                    
+                });
+            });            
+        </script>
+    </body>
+    
+</html>
