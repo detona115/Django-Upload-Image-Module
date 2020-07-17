@@ -60,10 +60,9 @@ class UploadedFilesThumb(models.Model):
        
     # Setando os campos que extraem os dados da foto
     def save(self, *args, **kwargs):
-        if not self.dimensao:
-            
+        if not self.dimensao:            
             im = Image.open(self.arquivo)
-            self.dimensao = im.size 
+            self.dimensao = "{} x {}".format(im.size[0], im.size[1]) 
             self.formato = im.format   
             self.thumb = criar_thumbnail(self.arquivo, self.formato)
         return super().save(*args, **kwargs)

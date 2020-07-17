@@ -18,7 +18,7 @@ class HomePageTests(TestCase):
             dimensao = '(500, 500)',
             formato = 'JPG',
             arquivo = SimpleUploadedFile(name='fg.jpg', content=open('/code/media/images/fg.jpg', 'rb').read()),
-            thumb = SimpleUploadedFile(name='fg.jpg', content=open('/code/media/images/fg.jpg', 'rb').read())
+            thumb = SimpleUploadedFile(name='fg.jpg', content=open('/code/media/images/thumbnails/fg.jpg', 'rb').read())
         )
 
     def test_form_homepage(self):
